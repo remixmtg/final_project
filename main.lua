@@ -11,7 +11,6 @@ function love.load()
     sprites = {}
     sprites.playerSheet = love.graphics.newImage('sprites/playerSheet1.png')
     sprites.bg = love.graphics.newImage("sprites/rt1a.png")
-    sprites.pokeball = love.graphics.newImage("sprites/pokeball.png")
     sprites.pokeballSheet = love.graphics.newImage("sprites/pokeballSheet.png")
     sprites.sign = love.graphics.newImage("sprites/sign.png")
     player = {}
@@ -102,7 +101,6 @@ function love.draw()
     pokeball.animations.open:draw(
             sprites.pokeballSheet,530 , 40, 0, 0.2, 0.2
         )
-    -- love.graphics.draw(sprites.pokeball, 830, 40, 0, 0.3, 0.3)
     --love.graphics.draw(ash, player.x, player.y, 0, 1.5, 1.5)
     if player.anim == player.animations.walkDown then
         player.animations.walkDown:draw(
