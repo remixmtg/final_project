@@ -1,0 +1,30 @@
+--create collision boxes
+function create()
+
+    ob1 = world:newRectangleCollider(0, 0, 80, love.graphics.getHeight())
+    ob1:setType('static')
+    ob2 = world:newRectangleCollider(80, 120, 150, 230)
+    ob2:setType('static')
+    ob3 = world:newRectangleCollider(230, 170, 393, 145)
+    ob3:setType('static')
+    ob4 = world:newRectangleCollider(230, 315, 193, 35)
+    ob4:setType('static')
+    ob5 = world:newRectangleCollider(230, 170, 393, 145)
+    ob5:setType('static')
+    ob6 = world:newRectangleCollider(80, 555, 343, 230)
+    ob6:setType('static')
+    ob7 = world:newRectangleCollider(535, 555, 343, 230)
+    ob7:setType('static')
+    ob8 = world:newRectangleCollider(880, 0, 80, love.graphics.getHeight())
+    ob8:setType('static')
+    ob9 = world:newRectangleCollider(180, 0, 500, 35)
+    ob9:setType('static')
+    ob10 = world:newRectangleCollider(780, 0, 100, 35)
+    ob10:setType('static')
+    ob11 = world:newRectangleCollider(185, 420, 695, 15)
+    ob11:setType('static')
+    ob12 = world:newRectangleCollider(785, 305, 95, 15)
+    ob12:setType('static')
+    
+end
+
