@@ -27,6 +27,10 @@ function create()
     ob12 = world:newRectangleCollider(785, 305, 95, 15)
     ob12:setType('static')
     ob12:setCollisionClass('Wall')
+    ob13 = world:newRectangleCollider(0, -40, love.graphics.getWidth(), 1)
+    ob13:setType('static')
+    ob13 = world:newRectangleCollider(0, love.graphics.getHeight() + 40, love.graphics.getWidth(), 1)
+    ob13:setType('static')
     
 end
 

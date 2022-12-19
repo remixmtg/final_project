@@ -16,6 +16,8 @@ function love.load()
     sprites.sign = love.graphics.newImage("sprites/sign.png")
     sprites.text = love.graphics.newImage("sprites/text.png")
     sprites.text1 = love.graphics.newImage("sprites/text1.png")
+    sprites.text2 = love.graphics.newImage("sprites/text2.png")
+    sprites.text3 = love.graphics.newImage("sprites/text3.png")
     player = {}
     player.x = (love.graphics.getWidth() / 2)
     player.y = 700
@@ -41,10 +43,13 @@ function love.load()
     pokeball.collider:setCollisionClass("Button")
     pokeball.collider:setType("static")
     pokeball.state = 0
+    gamestate = 0
     timer = 0
     timer1 = 0
     timer2 = 0
+    timer3 = 0
     create()
+
 
 end
 
@@ -56,6 +61,19 @@ function love.update(dt)
     -- store collider vector info
     local vectorX = 0
     local vectorY = 0
+
+    if love.keyboard.isDown("space") then
+        gamestate = 1
+    end
+    
+    if gamestate == 1 then
+    timer3 = timer3 + dt
+        if timer3 > 0.5 then 
+            if love.keyboard.isDown("space") then
+                gamestate = 3
+            end
+        end
+    end
 
     --pokeball open animation
     if pokeball.state == 1 then
@@ -186,6 +204,12 @@ function love.draw()
     end
     if pokeball.state == 3 then
         love.graphics.draw(sprites.text1, 50, 250, 0, 2, 2)
+    end
+    if gamestate == 0 then
+        love.graphics.draw(sprites.text2, 50, 250, 0, 2, 2)
+    end
+    if gamestate == 1 then
+        love.graphics.draw(sprites.text3, 50, 250, 0, 2, 2)
     end
     
     
