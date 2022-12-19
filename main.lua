@@ -7,9 +7,10 @@ function love.load()
     world = wf.newWorld()
     world:addCollisionClass('Button')
     world:addCollisionClass('Player')
+    world:addCollisionClass('Wall')
     world:setQueryDebugDrawing(true)
     sprites = {}
-    sprites.playerSheet = love.graphics.newImage('sprites/playerSheet1.png')
+    sprites.playerSheet = love.graphics.newImage('sprites/playerSheet.png')
     sprites.bg = love.graphics.newImage("sprites/rt1a.png")
     sprites.pokeballSheet = love.graphics.newImage("sprites/pokeballSheet.png")
     sprites.sign = love.graphics.newImage("sprites/sign.png")
@@ -25,10 +26,12 @@ function love.load()
     player.animations.walkLeft = anim8.newAnimation(player.grid('1-8',2), 0.2)
     player.animations.walkRight = anim8.newAnimation(player.grid('1-8',3), 0.2)
     player.animations.walkUp = anim8.newAnimation(player.grid('1-8',4), 0.2)
+    player.animations.jump = anim8.newAnimation(player.grid('9-12',1), 0.2)
     player.anim = player.animations.walkDown
     player.collider = world:newCircleCollider(player.x, player.y, 20)
     player.collider:setCollisionClass("Player")
     player.dir = "down"
+    player.isJumping = false
     pokeball = {}
     pokeball.grid = anim8.newGrid(250, 240, sprites.pokeballSheet:getWidth(), sprites.pokeballSheet:getHeight(), 40, 90)
     pokeball.animations = {}
@@ -40,8 +43,9 @@ function love.load()
     pokeball.state = 0
     timer = 0
     timer1 = 0
+    timer2 = 0
     create()
-      
+
 end
 
 
@@ -98,6 +102,27 @@ function love.update(dt)
         vectorY = 1
         player.anim = player.animations.walkDown
         player.dir = "down"
+        --check if player hits wall to jump
+        if player.collider:enter('Wall') then     
+            print("yee")                   
+            player.isJumping = true
+            timer2 = 0                
+        end
+
+    end
+    --jump when you are above a wall going down
+    if player.isJumping == true then
+        player.anim = player.animations.jump
+                    
+        player.collider:setPreSolve(function(collider_1, collider_2, contact)
+            contact:setEnabled(false)
+            
+            timer2 = timer2 + dt
+            if timer2 > 0.5 then
+                contact:setEnabled(true)      
+                player.isJumping = false
+            end           
+        end)    
     end
     --check to see if player collider is moving
     if vectorX == 0 and vectorY == 0 then
@@ -107,15 +132,21 @@ function love.update(dt)
     else
         player.isMoving = true
     end
-    if player.isMoving then
+    if player.isMoving and player.isJumping == false then
         -- player.x = player.x + 200 * vectorX * dt
         -- player.y = player.y + 200 * vectorY * dt
         player.collider:setLinearVelocity(vectorX * 200, vectorY * 200)
         player.anim:update(dt)
         world:update(dt)
+    elseif player.isJumping then
+        player.collider:setLinearVelocity(vectorX * 100, vectorY * 100)
+        player.anim:update(dt)
+        world:update(dt)
     end
-    
+    -- print(player.collider:getY())
 end
+
+
 
 function love.draw()
     -- local px = player:getX()
@@ -127,6 +158,10 @@ function love.draw()
     --love.graphics.draw(ash, player.x, player.y, 0, 1.5, 1.5)
     if player.anim == player.animations.walkDown then
         player.animations.walkDown:draw(
+            sprites.playerSheet, player.collider:getX() - 24 , player.collider:getY() - 38, 0, 1.5, 1.5
+        )
+    elseif player.anim == player.animations.jump then
+        player.animations.jump:draw(
             sprites.playerSheet, player.collider:getX() - 24 , player.collider:getY() - 38, 0, 1.5, 1.5
         )
 

@@ -23,8 +23,10 @@ function create()
     ob10:setType('static')
     ob11 = world:newRectangleCollider(185, 420, 695, 15)
     ob11:setType('static')
+    ob11:setCollisionClass('Wall')
     ob12 = world:newRectangleCollider(785, 305, 95, 15)
     ob12:setType('static')
+    ob12:setCollisionClass('Wall')
     
 end
 
