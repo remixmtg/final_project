@@ -8,6 +8,7 @@ function love.load()
     world:addCollisionClass('Button')
     world:addCollisionClass('Player')
     world:addCollisionClass('Wall')
+    world:addCollisionClass('Sign')
     world:setQueryDebugDrawing(true)
     sprites = {}
     sprites.playerSheet = love.graphics.newImage('sprites/playerSheet.png')
@@ -18,6 +19,7 @@ function love.load()
     sprites.text1 = love.graphics.newImage("sprites/text1.png")
     sprites.text2 = love.graphics.newImage("sprites/text2.png")
     sprites.text3 = love.graphics.newImage("sprites/text3.png")
+    sprites.signText = love.graphics.newImage("sprites/sign_text.png")
     player = {}
     player.x = (love.graphics.getWidth() / 2)
     player.y = 700
@@ -43,13 +45,18 @@ function love.load()
     pokeball.collider:setCollisionClass("Button")
     pokeball.collider:setType("static")
     pokeball.state = 0
+    sign = {}
+    sign.collider = world:newRectangleCollider(368, 372, 60, 30)
+    sign.collider:setCollisionClass("Sign")
+    sign.collider:setType("static")
+    sign.read = 0
     gamestate = 0
     timer = 0
     timer1 = 0
     timer2 = 0
     timer3 = 0
+    timer4 = 0
     create()
-
 
 end
 
@@ -62,6 +69,7 @@ function love.update(dt)
     local vectorX = 0
     local vectorY = 0
 
+    --intro messages
     if love.keyboard.isDown("space") then
         gamestate = 1
     end
@@ -70,9 +78,27 @@ function love.update(dt)
     timer3 = timer3 + dt
         if timer3 > 0.5 then 
             if love.keyboard.isDown("space") then
-                gamestate = 3
+                gamestate = 2
             end
         end
+    end
+    --sign read
+    -- if sign.read % 2 == 1 and love.keyboard.isDown("space") then
+    --     timer4 = timer4 + dt
+    --     if timer4 > 0.2 then 
+    --         sign.read = sign.read + 1
+    --     end
+    -- end
+    --let player pass through sign hitbox
+    if player.collider:enter('Sign') then  
+        player.collider:setPreSolve(function(collider_1, collider_2, contact)
+            contact:setEnabled(false)      
+        end)
+    end
+    if player.collider:exit('Sign') then  
+        player.collider:setPreSolve(function(collider_1, collider_2, contact)
+            contact:setEnabled(true)      
+        end)
     end
 
     --pokeball open animation
@@ -211,8 +237,10 @@ function love.draw()
     if gamestate == 1 then
         love.graphics.draw(sprites.text3, 50, 250, 0, 2, 2)
     end
-    
-    
+    if sign.read % 2 == 1 then
+        love.graphics.draw(sprites.signText, 50, 250, 0, 2, 2)
+    end
+    -- print(sign.read)
     -- world:draw()
     
 end
@@ -238,7 +266,14 @@ function love.keypressed(key)
             pokeball.state = 1
             pokeball.state = 2
         end
-        
+
+        local signtouch = world:queryCircleArea(px, py, 40, {"Sign"})
+        --check for collision with sign
+        if #signtouch > 0 then
+            sign.read = sign.read + 1
+        end
+    
+        -- print(sign.read)
     end
     
 end
