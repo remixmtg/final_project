@@ -1,6 +1,6 @@
 # CS50 Pokemon Route 1
 ### By Jeremy Siegel aka RemixMTG
-#### Video Demo:  <URL HERE>
+#### Video Demo:  <https://youtu.be/D4nS9uYTgSg>
 #### Description:
 
 This project started as an idea all the way back from Week 0 when we worked with Scratch. 
